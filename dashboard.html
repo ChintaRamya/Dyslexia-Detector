@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ReadEasy Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            background: #fdf6ec;
+            font-family: 'Inter', sans-serif;
+            color: #333;
+        }
+        .top-bar {
+            background: #6da674;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .button-group {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+            gap: 20px;
+        }
+        .btn {
+            background: #3a5a40;
+            color: white;
+            padding: 14px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #2c4533;
+        }
+        .video-box {
+            text-align: center;
+        }
+        #video-feed {
+            max-width: 90%;
+            border-radius: 12px;
+            margin-top: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        .result-text {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .info-section {
+            background: white;
+            margin: 40px auto;
+            padding: 30px;
+            max-width: 1000px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        .info-flex {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        .info-text {
+            flex: 1;
+            min-width: 250px;
+        }
+        .info-img {
+            flex: 1;
+            text-align: center;
+        }
+        .info-img img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">👋 Welcome, {{ username }}</div>
+
+    <div class="button-group">
+        <button class="btn" onclick="startDetection()">🎯 Start Test</button>
+        <button class="btn" onclick="window.location.href='/upload'">📷 Upload Image</button>
+    </div>
+
+    <div id="video-section" class="video-box" style="display:none;">
+        <img id="video-feed" src="" alt="Live Video Feed">
+        <p id="accuracy">Accuracy: --%</p>
+        <p id="final-result" class="result-text">Result: --</p>
+    </div>
+
+    <div class="info-section">
+        <h2>What is Dyslexia?</h2>
+        <div class="info-flex">
+            <div class="info-text">
+                <p><strong>Dyslexia</strong> is a reading disorder that impacts the ability to process written words. It is not related to intelligence and can be addressed with proper support.</p>
+                <p>ReadEasy analyzes your eye patterns to detect potential signs of dyslexia and provides support in a judgment-free, tech-enabled way.</p>
+            </div>
+            <div class="info-img">
+                <img src="{{ url_for('static', filename='img/dyslexia-info.png') }}" alt="Dyslexia Awareness">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function startDetection() {
+            document.getElementById('video-feed').src = '/video_feed';
+            document.getElementById('video-section').style.display = 'block';
+
+            fetch('/get_accuracy')
+                .then(res => res.json())
+                .then(data => {
+                    const acc = data.accuracy.toFixed(2);
+                    document.getElementById('accuracy').textContent = `Accuracy: ${acc}%`;
+                    document.getElementById('final-result').textContent = acc >= 50 ? "Likely Dyslexic" : "Not Dyslexic";
+                    document.getElementById('final-result').style.color = acc >= 50 ? 'crimson' : 'seagreen';
+                });
+        }
+    </script>
+
+</body>
+</html>

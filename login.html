@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ReadEasy Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: #f5f0e1;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            width: 40px;
+            height: 40px;
+            background: rgba(134, 205, 164, 0.4);
+            border-radius: 50%;
+            animation: float 10s infinite;
+        }
+        @keyframes float {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-110vh) scale(0.5);
+                opacity: 0;
+            }
+        }
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin: auto;
+            margin-top: 100px;
+            z-index: 1;
+            position: relative;
+        }
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.8em;
+            text-align: center;
+            color: #3a5a40;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+        .btn {
+            width: 100%;
+            background: #6da674;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #5d9463;
+        }
+    </style>
+</head>
+<body>
+    <!-- Bubbles -->
+    <div class="bubble" style="left: 10%; animation-delay: 0s;"></div>
+    <div class="bubble" style="left: 30%; animation-delay: 2s;"></div>
+    <div class="bubble" style="left: 50%; animation-delay: 4s;"></div>
+    <div class="bubble" style="left: 70%; animation-delay: 6s;"></div>
+    <div class="bubble" style="left: 90%; animation-delay: 8s;"></div>
+
+    <!-- Login Card -->
+    <div class="login-card">
+        <h1>ReadEasy</h1>
+        <form method="POST" action="/login">
+            <input type="text" name="username" placeholder="Enter your name" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button class="btn" type="submit">Login</button>
+        </form>
+    </div>
+</body>
+</html>

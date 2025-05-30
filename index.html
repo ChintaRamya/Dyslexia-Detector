@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ReadEasy | Dyslexia Detection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #fdf6ec;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #3a5a40;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            margin-bottom: 30px;
+        }
+        .btn {
+            background: #6da674;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #558c61;
+        }
+        #login-box {
+            text-align: center;
+        }
+        input {
+            padding: 10px;
+            width: 80%;
+            margin: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+        .hidden {
+            display: none;
+        }
+        .dashboard-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #video-feed {
+            max-width: 100%;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+        .info-panel {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .info-text, .info-img {
+            flex: 1;
+            min-width: 250px;
+        }
+        .info-img img {
+            max-width: 100%;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>ReadEasy</h1>
+
+        <div id="login-box" class="card">
+            <h2>Login to Continue</h2>
+            <input type="text" id="username" placeholder="Enter your name"><br>
+            <input type="password" id="password" placeholder="Password"><br>
+            <button class="btn" id="login-btn">Login</button>
+        </div>
+
+        <div id="main-app" class="hidden">
+            <div class="card">
+                <div class="welcome">Welcome, <span id="user-name-display"></span> 👋</div>
+                <h2>Dyslexia Detection Dashboard</h2>
+                <div class="dashboard-buttons">
+                    <button class="btn" id="start-btn">Start Eye Test</button>
+                    <button class="btn" onclick="window.location.href='/upload'">Upload Image</button>
+                </div>
+                <div id="video-section" class="hidden">
+                    <img id="video-feed">
+                    <p id="accuracy">Accuracy: --%</p>
+                    <p id="final-result">Result: --</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>What is Dyslexia?</h2>
+                <div class="info-panel">
+                    <div class="info-text">
+                        <p>Dyslexia is a reading disorder that makes it difficult to read, write, and spell. It is neurological and often inherited.</p>
+                        <p>ReadEasy helps identify dyslexia patterns using AI-based eye tracking.</p>
+                    </div>
+                    <div class="info-img">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Dyslexia_workshop.jpg/800px-Dyslexia_workshop.jpg" alt="Dyslexia Info">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const loginBtn = document.getElementById('login-btn');
+        const loginBox = document.getElementById('login-box');
+        const mainApp = document.getElementById('main-app');
+        const startBtn = document.getElementById('start-btn');
+        const videoFeed = document.getElementById('video-feed');
+        const videoSection = document.getElementById('video-section');
+        const accuracyDisplay = document.getElementById('accuracy');
+        const resultDisplay = document.getElementById('final-result');
+        const userNameDisplay = document.getElementById('user-name-display');
+
+        loginBtn.addEventListener('click', () => {
+            const username = document.getElementById('username').value.trim();
+            if (!username) {
+                alert("Please enter your name.");
+                return;
+            }
+            userNameDisplay.textContent = username;
+            loginBox.classList.add('hidden');
+            mainApp.classList.remove('hidden');
+        });
+
+        startBtn.addEventListener('click', () => {
+            videoFeed.src = '/video_feed';
+            videoSection.classList.remove('hidden');
+            fetchAccuracy();
+        });
+
+        function fetchAccuracy() {
+            fetch('/get_accuracy')
+                .then(res => res.json())
+                .then(data => {
+                    const acc = data.accuracy.toFixed(2);
+                    accuracyDisplay.textContent = `Accuracy: ${acc}%`;
+                    resultDisplay.textContent = acc >= 50 ? "Likely Dyslexic" : "Not Dyslexic";
+                    resultDisplay.style.color = acc >= 50 ? 'crimson' : 'seagreen';
+                })
+                .catch(() => {
+                    accuracyDisplay.textContent = 'Error';
+                    resultDisplay.textContent = 'Result: Error';
+                });
+        }
+    });
+</script>
+
+</body>
+</html>
